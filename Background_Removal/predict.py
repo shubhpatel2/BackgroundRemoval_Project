@@ -49,4 +49,4 @@ for filename in os.listdir(INPUT_FOLDER):
         output_path = os.path.join(OUTPUT_FOLDER, f"{os.path.splitext(filename)[0]}_transparent.png")
         Image.fromarray(rgba_image).save(output_path)
 
-        print(f"✅ Saved: {output_path}")
+        print(f"Saved: {output_path}")

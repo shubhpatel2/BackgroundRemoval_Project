@@ -32,10 +32,7 @@ class BackgroundRemovalDataset:
             self.masks.append(mask)
 
         return np.array(self.images), np.array(self.masks)
-        
-        print("✅ datasets.py loaded!")
-    
-
+            
     def get_splits(self, test_size=0.2, random_state=42):
         X, y = self.load_data()
         return train_test_split(X, y, test_size=test_size, random_state=random_state)

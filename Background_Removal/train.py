@@ -2,8 +2,8 @@ import os
 os.environ["TF_GPU_ALLOCATOR"] = "cuda_malloc_async"
 import tensorflow as tf
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
-from utils1.datasets import BackgroundRemovalDataset
-from Models.Unet import unet_model  # Make sure the function name matches
+from utils.datasets import BackgroundRemovalDataset
+from Models.Unet import unet_model  
 
 import tensorflow as tf
 
@@ -20,18 +20,17 @@ if gpus:
 IMAGE_SIZE = (256, 256)
 BATCH_SIZE = 5
 EPOCHS = 5
-MODEL_PATH = 'unet_best_model.keras'  # Save as a .h5 model file
+MODEL_PATH = 'unet_best_model.keras'  
 
 # 1. Load Dataset
 dataset = BackgroundRemovalDataset(
     image_dir='Data/DUTS-TE-Image',
-    mask_dir='Data/DUTS-TE-Mask',  # Make sure this matches your folder name
+    mask_dir='Data/DUTS-TE-Mask', 
     image_size=IMAGE_SIZE
 )
 X_train, X_val, y_train, y_val = dataset.get_splits(test_size=0.2)
 
 # 2. Create TensorFlow Dataset
-# train_dataset = tf.data.Dataset.from_tensor_slices((X_train, y_train)).batch(BATCH_SIZE).shuffle(100)
 def data_generator():
     for x, y in zip(X_train, y_train):
         yield x, y
@@ -47,7 +46,7 @@ train_dataset = tf.data.Dataset.from_generator(
 val_dataset = tf.data.Dataset.from_tensor_slices((X_val, y_val)).batch(BATCH_SIZE)
 
 # 3. Build Model
-model = unet_model(input_size=(IMAGE_SIZE[0], IMAGE_SIZE[1], 3))  # use the correct function name
+model = unet_model(input_size=(IMAGE_SIZE[0], IMAGE_SIZE[1], 3))  
 
 model.summary()
 model.compile(
@@ -73,4 +72,4 @@ history = model.fit(
     callbacks=callbacks
 )
 
-print(f"\n✅ Training complete. Best model saved to {MODEL_PATH}")
+print(f"\n Training complete. Best model saved to {MODEL_PATH}")

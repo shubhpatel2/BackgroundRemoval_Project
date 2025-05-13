@@ -7,12 +7,12 @@ from Models.Unet import unet_model
 from utils1.mask_utils import apply_mask_transparent
 import matplotlib.pyplot as plt
 
-# --- Configuration ---
-INPUT_FOLDER = 'Data/Test_image'                              # Folder containing input images
-OUTPUT_FOLDER = 'output/'                           # Folder to save output images
-MODEL_PATH = 'unet_best_model.keras'                # Path to your trained model
 
-# Create output directory if not exists
+INPUT_FOLDER = 'Data/Test_image'                       
+OUTPUT_FOLDER = 'output/'                          
+MODEL_PATH = 'unet_best_model.keras'               
+
+
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
 # --- Load the trained model ---
@@ -34,7 +34,7 @@ for filename in os.listdir(INPUT_FOLDER):
         # Predict
         predicted_mask = model.predict(input_tensor)[0]
 
-        # Optional visualization
+        # visualization
         plt.imshow(predicted_mask.squeeze(), cmap='gray')
         plt.title(f"Predicted Mask - {filename}")
         plt.axis('off')

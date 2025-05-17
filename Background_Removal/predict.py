@@ -3,21 +3,19 @@ import cv2
 import numpy as np
 from PIL import Image
 import tensorflow as tf
-from Models.Unet import unet_model
-from utils1.mask_utils import apply_mask_transparent
 import matplotlib.pyplot as plt
+from utils1.mask_utils import apply_mask_transparent
 
+# --- Configuration ---
+INPUT_FOLDER = 'Data/Test_image'
+OUTPUT_FOLDER = 'output/'
+MODEL_PATH = 'pretrained_unet_best_model.keras' 
 
-INPUT_FOLDER = 'Data/Test_image'                       
-OUTPUT_FOLDER = 'output/'                          
-MODEL_PATH = 'unet_best_model.keras'               
-
-
+# Create output directory if not exists
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
-# --- Load the trained model ---
-model = unet_model(input_size=(256, 256, 3))
-model.load_weights(MODEL_PATH)
+# --- Load the full model directly ---
+model = tf.keras.models.load_model(MODEL_PATH, compile=False)
 
 # --- Loop through all images ---
 for filename in os.listdir(INPUT_FOLDER):
@@ -32,9 +30,9 @@ for filename in os.listdir(INPUT_FOLDER):
         input_tensor = np.expand_dims(input_array, axis=0)
 
         # Predict
-        predicted_mask = model.predict(input_tensor)[0]
+        predicted_mask = model.predict(input_tensor, verbose=0)[0]
 
-        # visualization
+        # Optional visualization
         plt.imshow(predicted_mask.squeeze(), cmap='gray')
         plt.title(f"Predicted Mask - {filename}")
         plt.axis('off')
@@ -49,4 +47,4 @@ for filename in os.listdir(INPUT_FOLDER):
         output_path = os.path.join(OUTPUT_FOLDER, f"{os.path.splitext(filename)[0]}_transparent.png")
         Image.fromarray(rgba_image).save(output_path)
 
-        print(f"Saved: {output_path}")
+        print(f"✅ Saved: {output_path}")
